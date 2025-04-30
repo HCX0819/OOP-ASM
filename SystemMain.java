@@ -40,7 +40,7 @@ public class SystemMain {
         scanner.close();
     }
 
-    public static void displayMenu() {
+    public static void displayMenu() {     
         System.out.println("\n=================================");
         System.out.println("    Vehicle Rental System Menu   ");
         System.out.println("=================================");
