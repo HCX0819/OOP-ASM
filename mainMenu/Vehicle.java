@@ -1,3 +1,4 @@
+package mainMenu;
 public class Vehicle {
     private String vehicleId;
     private String brand;

@@ -1,3 +1,5 @@
+import mainMenu.Car;
+
 public class Registration {
 	private int regNo;
 	private Owner owner;

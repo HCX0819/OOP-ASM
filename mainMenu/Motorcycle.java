@@ -1,3 +1,4 @@
+package mainMenu;
 public class Motorcycle extends Vehicle {
     private boolean hasHelmet;
 

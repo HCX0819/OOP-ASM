@@ -1,3 +1,4 @@
+package mainMenu;
 public class Car extends Vehicle {
   private String carType;
   

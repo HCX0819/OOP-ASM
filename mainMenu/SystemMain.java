@@ -1,7 +1,8 @@
+package mainMenu;
 import java.util.Scanner;
 
 public class SystemMain {
-    public static void main(String[] args) {
+    public static boolean custMenuDisplay() {
         Scanner scanner = new Scanner(System.in);
         VehicleRentalSystem rentalSystem = new VehicleRentalSystem();
         int choice;
@@ -31,13 +32,14 @@ public class SystemMain {
                     break;
                 case 0:
                     System.out.println("Thank you for using Vehicle Rental System. Goodbye!");
-                    break;
+                    return true; // Return true to indicate logout
                 default:
                     System.out.println("Invalid choice! Please select a number between 0 and 4.");
             }
         } while (choice != 0);
 
         scanner.close();
+        return false;
     }
 
     public static void displayMenu() {     

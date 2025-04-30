@@ -1,5 +1,7 @@
+package mainMenu;
 import java.util.ArrayList;
 import java.util.List;
+import assign.CustAccount;
 
 public class VehicleRentalSystem {
 
@@ -9,6 +11,11 @@ public class VehicleRentalSystem {
 
     public static List<RentalRecord> rentalHistory = new ArrayList<>();
     
+    private static ArrayList<CustAccount> customerList;
+
+    public static void setCustomerList(ArrayList<CustAccount> customers) {
+        customerList = customers;
+    }
 
     public void viewAndRentVehicles() {
         System.out.println("Displaying available vehicles...");
@@ -23,8 +30,11 @@ public class VehicleRentalSystem {
     }
 
     public void updatePersonalInfo() {
-        System.out.println("Updating personal information...");
-        System.out.println(" ");
+        if (customerList != null) {
+            UpdatePersonalInfo_Function.updatePersonalInfo(customerList);
+        } else {
+            System.out.println("Error: Customer list not initialized!");
+        }
     }
 
     public void returnVehicle() {

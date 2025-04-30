@@ -1,3 +1,4 @@
+package mainMenu;
 import java.time.LocalDate;
 
 public class RentalRecord {
@@ -5,15 +6,17 @@ public class RentalRecord {
     private Vehicle vehicle;
     private LocalDate rentalDate;
     private int rentalDurationDays;
+    private String username;
 
     private LocalDate returnDate;
     private int lateFee;
 
-    // Constructor with Vehicle, LocalDate, and rental duration
-    public RentalRecord(Vehicle vehicle, LocalDate rentalDate, int rentalDurationDays) {
+    // Constructor with Vehicle, LocalDate, rental duration, and username
+    public RentalRecord(Vehicle vehicle, LocalDate rentalDate, int rentalDurationDays, String username) {
         this.vehicle = vehicle;
         this.rentalDate = rentalDate;
         this.rentalDurationDays = rentalDurationDays;
+        this.username = username;
     }
 
     // Getters and other methods
@@ -30,7 +33,9 @@ public class RentalRecord {
         return rentalDurationDays;
     }
 
-    
+    public String getUsername() {
+        return username;
+    }
 
     public LocalDate getReturnDate() {
         return returnDate;
