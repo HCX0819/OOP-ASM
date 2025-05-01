@@ -8,14 +8,34 @@ public class ViewAndRentVehicles_MenuDisplay {
 
     public static void displayVehiclesByChoice(List<Vehicle> vehicles) {
         Scanner scanner = new Scanner(System.in);
-        displayMainMenu();
-        
-        int choice = scanner.nextInt();
+        boolean validInput = false;
+    
+        while (!validInput) {
+            displayMainMenu();
+            
+            String input = scanner.nextLine(); // Read input as a string
+    
+            try {
+                int choice = Integer.parseInt(input); // Try to parse the input as an integer
+                validInput = true; // If parsing succeeds, set validInput to true
+    
+                switch (choice) {
+                    case 1 :
+                     displayCarMenu(vehicles);
+                        break; // Added break statement to exit the switch after displaying car menu
 
-        switch (choice) {
-            case 1 -> displayCarMenu(vehicles);
-            case 2 -> displayMotorcycleMenu(vehicles);
-            default -> System.out.println("Invalid choice!");
+                    case 2 :
+                     displayMotorcycleMenu(vehicles);
+                        break; // Added break statement to exit the switch after displaying motorcycle menu
+
+                    default :
+                     System.out.println("Invalid choice! Please enter 1 or 2.");
+                     validInput = false; // Keep the loop running for invalid input
+                     break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input! Please enter a number.");
+            }
         }
     }
 
