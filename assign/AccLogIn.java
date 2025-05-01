@@ -11,6 +11,7 @@ import mainMenu.ViewAndRentVehicles_Function;
 import mainMenu.ReturnVehicle_Function;
 import mainMenu.UpdatePersonalInfo_Function;
 import mainMenu.VehicleRentalSystem;
+import transaction.TransactionApp;
 
 public class AccLogIn {
 
@@ -52,7 +53,6 @@ public class AccLogIn {
                 UpdatePersonalInfo_Function.setCurrentUsername(uNameEmail);
                 // Set customer list for personal info updates
                 VehicleRentalSystem.setCustomerList(customerList);
-                        
             }
             else{
                 addMethod.separator();
@@ -114,7 +114,6 @@ public class AccLogIn {
             
             if(userExist==true && passwordCorrect==true){
                 validateLogIn = true;
-                        
             }
             else{
                 addMethod.separator();
@@ -137,7 +136,7 @@ public class AccLogIn {
         System.out.println("Login Successfully");
         addMethod.pressKeyCont(scanner);
         //continue
-        
+        TransactionApp.staffMenuDisplay();
     }
     
     

@@ -224,137 +224,83 @@ public class AccSignUp {
         do{
             System.out.print(" IC number(YYMMDD-PB-XXXX) : ");
             icNum = scanner.nextLine();
-                        
-            //initialization
-            boolean emptyIcNum = false;
-            boolean icInvalidLength = false;
-            boolean icNumUsed = false;
-            boolean notDigitBday = false;
-            boolean exMaxMonth = false;
-            boolean doubleZeroMonth = false; //month double zero
-            boolean exMaxDay = false;
-            boolean dashMiss = false;
-            boolean notDigitPb = false;
-            boolean doubleZeroPb = false;
-            boolean notDigitNum = false;
-            boolean allZeroLast = false;
-                
-            //Check for empty input (or not assigning value to variable)
-            if(icNum == null || icNum.trim().isEmpty()){
-                emptyIcNum = true;
-
-            }else{
-                //Length
-                if(icNum.length()!=14){
-                    icInvalidLength = true;
+            
+            try {
+                // Check for empty input
+                if(icNum == null || icNum.trim().isEmpty()) {
+                    throw new Exception("IC number cannot be empty");
                 }
 
-                //Day of birth
-                //Avoid non-digit input for year, month(first number) and day(first number)
-                for(CustAccount account :customerList){
-                    if(icNum.equals(account.getIcNum())){
-                        icNumUsed = true;
-                        break;
+                // Check length
+                if(icNum.length() != 14) {
+                    throw new Exception("IC must be exactly 14 characters");
+                }
+
+                // Check if IC is already used
+                for(CustAccount account : customerList) {
+                    if(icNum.equals(account.getIcNum())) {
+                        throw new Exception("This IC number is already registered");
                     }
                 }
-                if(!Character.isDigit(icNum.charAt(0)) || !Character.isDigit(icNum.charAt(1)) || !Character.isDigit(icNum.charAt(3)) || !Character.isDigit(icNum.charAt(5))){
-                    notDigitBday = true;
+
+                // Check format (YYMMDD-PB-XXXX)
+                String birthDate = icNum.substring(0, 6);
+                String stateCode = icNum.substring(7, 9);
+                String lastFour = icNum.substring(10);
+
+                // Check dashes
+                if(icNum.charAt(6) != '-' || icNum.charAt(9) != '-') {
+                    throw new Exception("Must include '-' at correct positions");
                 }
 
-                //Month
-                //Allow 1 and 0(because only 12 months, would either be 0 or 1)
-                if(icNum.charAt(2)!='0' && icNum.charAt(2)!='1'){
-                    exMaxMonth = true;
-                }
-                //cannot exceed 12 for month input
-                if(icNum.charAt(2)=='1' && icNum.substring(3,4).matches("[3-9]")){
-                    exMaxMonth =true;
-                }
-                //prevent "00" for month input
-                if(icNum.charAt(2)=='0'&& icNum.charAt(3)=='0'){
-                    doubleZeroMonth = true;
+                // Check birth date digits
+                if(!birthDate.matches("\\d{6}")) {
+                    throw new Exception("Birth date must contain only numbers");
                 }
 
-                //Day
-                //Avoid exceed 31 days, 0-3 only since max days in single month is 31
-                if(icNum.charAt(4)!='0'&& icNum.charAt(4)!='1' && icNum.charAt(4)!='2' && icNum.charAt(4)!='3'){
-                    exMaxDay = true;
-                }
-                //Avoid exceed 31 days, avoid month input between 32 to 39
-                if(icNum.charAt(4)=='3' && icNum.substring(5,6).matches("[2-9]")){
-                    exMaxDay = true;
+                // Check month (01-12)
+                int month = Integer.parseInt(birthDate.substring(2, 4));
+                if(month < 1 || month > 12) {
+                    throw new Exception("Month must be between 01-12");
                 }
 
-                //State of birth
-                if(!Character.isDigit(icNum.charAt(7)) || !Character.isDigit(icNum.charAt(8))){
-                    notDigitPb = true;
+                // Check day (01-31)
+                int day = Integer.parseInt(birthDate.substring(4, 6));
+                if(day < 1 || day > 31) {
+                    throw new Exception("Day must be between 01-31");
                 }
-                if(icNum.charAt(7)=='0' && icNum.charAt(8)=='0'){
-                    doubleZeroPb = true;
-                } 
-                
-                //last 4 number
-                if(icNum.charAt(10) == '0' && icNum.charAt(11) == '0' && icNum.charAt(12) == '0' && icNum.charAt(13) == '0'){
-                    allZeroLast = true;
-                }                
-                if(!icNum.substring(10).matches("[0-9]+")){
-                    notDigitNum = true;
-                }                
 
-                //"-" symbol
-                //Avoid symbol got replaced by other input
-                if(icNum.charAt(6)!='-' || icNum.charAt(9)!='-'){
-                    dashMiss =true;
+                // Check state code
+                if(!stateCode.matches("\\d{2}")) {
+                    throw new Exception("State code must contain only numbers");
                 }
-            }
+                if(stateCode.equals("00")) {
+                    throw new Exception("State code cannot be 00");
+                }
 
-            if(!emptyIcNum && !icInvalidLength && !icNumUsed && !notDigitBday && !exMaxMonth && !doubleZeroMonth && !exMaxDay && !dashMiss && !notDigitPb && !doubleZeroPb && !allZeroLast && !notDigitNum){
+                // Check last 4 digits
+                if(!lastFour.matches("\\d{4}")) {
+                    throw new Exception("Last 4 digits must be numbers");
+                }
+                if(lastFour.equals("0000")) {
+                    throw new Exception("Last 4 digits cannot all be 0");
+                }
+
+                // If we get here, all validations passed
                 validateIcNum = true;
 
-            }else{
-                addMethod.separator();
-                addMethod.errorHeader();
-                System.out.println("                                 |");                                    
-
-                if(emptyIcNum){
-                    System.out.println("|- No IC number given                          |");
-                }
-                if(icInvalidLength){
-                    System.out.println("|- Less or more input for IC numbers           |");
-                }
-                if(icNumUsed){
-                    System.out.println("|- IC number has been used                     |");
-                }
-                if(notDigitBday){
-                    System.out.println("|- Non-digit input for data of birth           |");
-                }
-                if(exMaxMonth){
-                    System.out.println("|- Exceed maximum months in a year             |");
-                }
-                if(doubleZeroMonth){
-                    System.out.println("|- Invalid month input (Month - 00)            |");
-                }
-                if(exMaxDay){
-                    System.out.println("|- Exceed maximum days in a month              |");
-                }
-                if(notDigitPb){
-                    System.out.println("|- Non-digit input for place of birth          |");                
-                }    
-                if(doubleZeroPb){
-                    System.out.println("|- Invalid place of birth input (PB - 00)      |");
-                }
-                if(notDigitNum){
-                    System.out.println("|- Non-digit input                             |");
-                }
-                if(allZeroLast){
-                    System.out.println("|- Invalid input (00 input)                    |");
-                }
-                if(dashMiss){
-                    System.out.println("|- Missing special symbol \"-\"                |");
-                }
-                addMethod.emptyLine();
-                addMethod.separator();
-                addMethod.plsTryAgain();
+            } catch (Exception e) {
+                System.out.println("\n╔════════════════ IC FORMAT ERROR ════════════════╗");
+                System.out.println("║                                                  ║");
+                System.out.println("║  - " + e.getMessage() + String.format("%-" + (37 - e.getMessage().length()) + "s", " ") + "║");
+                System.out.println("║                                                  ║");
+                System.out.println("╠══════════════════ EXAMPLE ═══════════════════════╣");
+                System.out.println("║  Correct format: 990512-08-1234                  ║");
+                System.out.println("║  - 990512: Birth date (YYMMDD)                   ║");
+                System.out.println("║  - 08: State code                                ║");
+                System.out.println("║  - 1234: Last 4 digits                           ║");
+                System.out.println("╚══════════════════════════════════════════════════╝");
+                System.out.println("\nPlease try again with the correct format.\n");
             }
                 
         }while(!validateIcNum);

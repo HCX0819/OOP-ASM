@@ -2,6 +2,7 @@ package mainMenu;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
+import payment.RunInvoice;
 
 public class ViewAndRentVehicles_Function {
     
@@ -47,19 +48,38 @@ public class ViewAndRentVehicles_Function {
         }
 
         System.out.print("Enter Rental Start Date (YYYY-MM-DD): ");
-        String startDateInput = scanner.nextLine();
-        System.out.print("Enter Return Date (YYYY-MM-DD): ");
-        String returnDateInput = scanner.nextLine();
-
-        // ✅ Calculate rental days dynamically
-        LocalDate startDate = LocalDate.parse(startDateInput);
-        LocalDate returnDate = LocalDate.parse(returnDateInput);
-        int rentalDays = (int) ChronoUnit.DAYS.between(startDate, returnDate);
-
-        if (rentalDays <= 0) {
-            System.out.println("Return date must be after start date!\n");
-            return;
+        LocalDate startDate = null;
+        while (startDate == null) {
+            try {
+                String startDateInput = scanner.nextLine();
+                startDate = LocalDate.parse(startDateInput);
+            } catch (Exception e) {
+                System.out.println("Invalid date format! Please enter date in YYYY-MM-DD format.");
+                System.out.print("Enter Rental Start Date (YYYY-MM-DD): ");
+            }
         }
+
+        System.out.print("Enter Return Date (YYYY-MM-DD): ");
+        LocalDate returnDate = null;
+        while (returnDate == null) {
+            try {
+                String returnDateInput = scanner.nextLine();
+                returnDate = LocalDate.parse(returnDateInput);
+                
+                // Check if return date is after start date
+                if (!returnDate.isAfter(startDate)) {
+                    System.out.println("Return date must be after start date!");
+                    System.out.print("Enter Return Date (YYYY-MM-DD): ");
+                    returnDate = null;
+                    continue;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid date format! Please enter date in YYYY-MM-DD format.");
+                System.out.print("Enter Return Date (YYYY-MM-DD): ");
+            }
+        }
+
+        int rentalDays = (int) ChronoUnit.DAYS.between(startDate, returnDate);
 
         double totalCost = selectedVehicle.getPricePerDay() * rentalDays;
 
@@ -75,12 +95,17 @@ public class ViewAndRentVehicles_Function {
 
         if (confirm.equals("Y")) {
             selectedVehicle.setAvailable(false);
-            Payment.processPayment(scanner);
-
-            // Add to rental history with username
-            VehicleRentalSystem.rentalHistory.add(new RentalRecord(selectedVehicle, startDate, rentalDays, currentUsername));
-
-            System.out.println("Rental confirmed and recorded!\n");
+            boolean paymentSuccessful = RunInvoice.paymentMenu();
+            
+            if (paymentSuccessful) {
+                // Add to rental history with username
+                VehicleRentalSystem.rentalHistory.add(new RentalRecord(selectedVehicle, startDate, rentalDays, currentUsername));
+                System.out.println("Rental confirmed and recorded!\n");
+            } else {
+                // If payment was not successful, make the vehicle available again
+                selectedVehicle.setAvailable(true);
+                System.out.println("Rental cancelled due to incomplete payment.\n");
+            }
         } else {
             System.out.println("Rental cancelled.\n");
         }
