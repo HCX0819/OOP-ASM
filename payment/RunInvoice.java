@@ -1,13 +1,16 @@
 package payment;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import mainMenu.Vehicle;
 
 public class RunInvoice {
 
     public static  ArrayList<Feedback> feedbackList = new ArrayList<>();
 
-    public static boolean paymentMenu() {
+   public static boolean paymentMenu(Vehicle vehicle, LocalDate startDate,
+           LocalDate returnDate, double totalCost, String customerName){
         Scanner scanner = new Scanner(System.in);
         int choice = 0;
         boolean paymentCompleted = false;
@@ -31,7 +34,9 @@ public class RunInvoice {
 
             switch (choice) {
                 case 1:
-                    paymentCompleted = handlePayment(scanner);
+                    paymentCompleted = handlePayment(scanner, vehicle,
+                            startDate, returnDate, totalCost, customerName);
+
                     if (paymentCompleted) {
                         return true;
                     }
@@ -55,75 +60,22 @@ public class RunInvoice {
         return false;
     }
 
-    public static boolean handlePayment(Scanner scanner) {
+   public static boolean handlePayment(Scanner scanner, Vehicle vehicle,
+        LocalDate startDate, LocalDate returnDate, 
+        double totalCost, String customerName){
+
         System.out.println("\n--PAYMENT PAGE--");
-        System.out.print("Enter customer name: ");
-        String customerName = scanner.nextLine();
-
-        // Add IC number validation
-        String icNum;
-        boolean validateIcNum = false;
-        do {
-            System.out.print("Enter IC number (YYMMDD-PB-XXXX): ");
-            icNum = scanner.nextLine();
-            
-            try {
-                // Basic format validation
-                if (icNum == null || icNum.trim().isEmpty()) {
-                    throw new Exception("No IC number given");
-                }
-                if (icNum.length() != 14) {
-                    throw new Exception("IC number must be exactly 14 characters");
-                }
-                if (icNum.charAt(6) != '-' || icNum.charAt(9) != '-') {
-                    throw new Exception("IC number must follow format YYMMDD-PB-XXXX");
-                }
-
-                // Validate birth date part (YYMMDD)
-                String birthDate = icNum.substring(0, 6);
-                if (!birthDate.matches("\\d{6}")) {
-                    throw new Exception("Birth date must be 6 digits");
-                }
-
-                int month = Integer.parseInt(birthDate.substring(2, 4));
-                if (month < 1 || month > 12) {
-                    throw new Exception("Invalid month in IC number");
-                }
-
-                int day = Integer.parseInt(birthDate.substring(4, 6));
-                if (day < 1 || day > 31) {
-                    throw new Exception("Invalid day in IC number");
-                }
-
-                // Validate state code (PB)
-                String stateCode = icNum.substring(7, 9);
-                if (!stateCode.matches("\\d{2}") || stateCode.equals("00")) {
-                    throw new Exception("Invalid state code in IC number");
-                }
-
-                // Validate last 4 digits
-                String lastFour = icNum.substring(10);
-                if (!lastFour.matches("\\d{4}") || lastFour.equals("0000")) {
-                    throw new Exception("Invalid last 4 digits in IC number");
-                }
-
-                validateIcNum = true;
-
-            } catch (Exception e) {
-                System.out.println("\nError: " + e.getMessage());
-                System.out.println("Please try again.\n");
-            }
-        } while (!validateIcNum);
-
-        System.out.print("Enter amount: RM ");
-        while (!scanner.hasNextDouble()) {
-            System.out.print("Invalid amount. Please enter a number: RM ");
-            scanner.next();
-        }
-        double amount = scanner.nextDouble();
-        scanner.nextLine(); // consume newline
-
-        System.out.println("Select Payment Method:\n1. Credit Card\n2. Online Banking");
+        System.out.println("\nPayment Details:");
+        System.out.println("Customer Name: " + customerName);
+        System.out.println("Vehicle: " + vehicle.getBrand() + " " + vehicle.getModel());
+        System.out.println("Rental Period: " + startDate + " to " + returnDate);
+        System.out.printf("Total Amount: RM%.2f\n", totalCost);
+        
+        System.out.println("\nSelect Payment Method:");
+        System.out.println("1. Credit Card");
+        System.out.println("2. Online Banking");
+        System.out.print("Enter choice (1-2): ");
+        
         int method = scanner.nextInt();
         scanner.nextLine();
 
@@ -139,10 +91,11 @@ public class RunInvoice {
                 System.out.println("Invalid method.");
                 return false;
         }
-
-        Invoice invoice = new Invoice(customerName, amount, paymentMethod);
+    
+        Invoice invoice = new Invoice(vehicle, startDate, returnDate, totalCost, customerName);
+        Invoice.invoiceList.add(invoice);
         invoice.printInvoice();
-        invoice.printReceipt();
+
         return true;
     }
 
@@ -195,4 +148,6 @@ public class RunInvoice {
             }
         }
     }
+
+  
 }

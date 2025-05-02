@@ -95,7 +95,7 @@ public class ViewAndRentVehicles_Function {
 
         if (confirm.equals("Y")) {
             selectedVehicle.setAvailable(false);
-            boolean paymentSuccessful = RunInvoice.paymentMenu();
+            boolean paymentSuccessful = RunInvoice.paymentMenu(selectedVehicle, startDate, returnDate, totalCost, currentUsername);
             
             if (paymentSuccessful) {
                 // Add to rental history with username
