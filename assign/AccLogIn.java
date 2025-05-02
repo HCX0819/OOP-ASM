@@ -15,8 +15,11 @@ import transaction.TransactionApp;
 
 public class AccLogIn {
 
+    final static int MAX_ATTEMPT = 3;
+    static int attempt1 = 0;
+    static int attempt2 = 0;
+
     public static void custLogIn(Scanner scanner, ArrayList<CustAccount>customerList){
-        
         addMethod.clearScreen();
         addMethod.headerLogIn();
         
@@ -62,6 +65,7 @@ public class AccLogIn {
                 VehicleRentalSystem.setCustomerList(customerList);
             }
             else{
+                attempt1++;
                 addMethod.separator();
                 addMethod.errorHeader();
                 System.out.println("                                 |");                
@@ -83,6 +87,43 @@ public class AccLogIn {
                 addMethod.emptyLine();
                 addMethod.separator();
                 addMethod.plsTryAgain();
+
+                String confirmMainMenu;
+                if(attempt1>=MAX_ATTEMPT){
+                    addMethod.clearScreen();
+                    addMethod.separator();
+                    addMethod.emptyLine();
+                    System.out.println("|           Too many failed attempts.          |");
+                    System.out.println("|             Return to Main Menu?             |");
+                    System.out.println("|                     (Y/N)                    |");
+                    addMethod.emptyLine();
+                    addMethod.separator();
+
+                    do{
+                        System.out.print(" Option(Y for yes and N for no) : ");
+                        confirmMainMenu = scanner.nextLine().toUpperCase();
+                        
+                        if(!confirmMainMenu.equals("Y") && !confirmMainMenu.equals("N")){
+                            addMethod.separator();
+                            addMethod.errorHeader();
+                            System.out.println("                                 |");
+                            System.out.println("|- Invalid aside from \"Y\" and \"N\"          |");
+                            addMethod.emptyLine();
+                            addMethod.separator();
+                            addMethod.plsTryAgain();
+                        }
+                               
+                    }while(!confirmMainMenu.equals("Y") && !confirmMainMenu.equals("N"));
+
+                    if(confirmMainMenu.equals("Y")){
+                        attempt1 = 0;
+                        Start.menu();
+                    }else{
+                        attempt1 = 0;
+                        addMethod.clearScreen();
+                        addMethod.headerLogIn();                        
+                    }
+                }
             }
         }
 
@@ -143,6 +184,7 @@ public class AccLogIn {
                 validateLogIn = true;
             }
             else{
+                attempt2++;
                 addMethod.separator();
                 addMethod.errorHeader();
                 System.out.println("                                 |");                
@@ -164,6 +206,43 @@ public class AccLogIn {
                 addMethod.emptyLine();
                 addMethod.separator();
                 addMethod.plsTryAgain();
+
+                String confirmMainMenu;
+                if(attempt2>=MAX_ATTEMPT){
+                    addMethod.clearScreen();
+                    addMethod.separator();
+                    addMethod.emptyLine();
+                    System.out.println("|           Too many failed attempts.          |");
+                    System.out.println("|             Return to Main Menu?             |");
+                    System.out.println("|                     (Y/N)                    |");
+                    addMethod.emptyLine();
+                    addMethod.separator();
+
+                    do{
+                        System.out.print(" Option(Y for yes and N for no) : ");
+                        confirmMainMenu = scanner.nextLine().toUpperCase();
+                        
+                        if(!confirmMainMenu.equals("Y") && !confirmMainMenu.equals("N")){
+                            addMethod.separator();
+                            addMethod.errorHeader();
+                            System.out.println("                                 |");
+                            System.out.println("|- Invalid aside from \"Y\" and \"N\"          |");
+                            addMethod.emptyLine();
+                            addMethod.separator();
+                            addMethod.plsTryAgain();
+                        }
+                               
+                    }while(!confirmMainMenu.equals("Y") && !confirmMainMenu.equals("N"));
+
+                    if(confirmMainMenu.equals("Y")){
+                        attempt2 = 0;
+                        Start.menu();
+                    }else{
+                        attempt2 = 0;
+                        addMethod.clearScreen();
+                        addMethod.headerLogIn();                        
+                    }
+                }
             }
         }
         
