@@ -27,8 +27,9 @@ public class Account{
 
         this.name = name;
         this.icNum = icNum;
-        this.contact = contact;
-        this.eContact = eContact;
+        // Call the setter
+        this.setContact(contact); 
+        this.seteContact(eContact);
     }
 
     //accessor and mutator (getter and setter)
@@ -77,7 +78,18 @@ public class Account{
     }
 
     public void setContact(String contact) {
-        this.contact = contact;
+        String mContactFormat = "+6";
+        if (contact != null && !contact.trim().isEmpty()) {
+            String trimmedContact = contact.trim();
+            if (!trimmedContact.startsWith(mContactFormat)) {
+                this.contact = mContactFormat + trimmedContact;
+            }else{
+                this.contact = trimmedContact; // Already starts with +6
+            }
+        }else{
+            this.contact = "";
+        }
+        System.out.println(this.contact);
     }
 
     public String geteContact() {
@@ -85,7 +97,20 @@ public class Account{
     }
 
     public void seteContact(String eContact) {
-        this.eContact = eContact;
+        System.out.println("seteContact() called with: " + eContact);
+        String mContactFormat = "+6";
+        if (eContact != null && !eContact.trim().isEmpty()) {
+            String trimmedEContact = eContact.trim(); //trim down the contact input, if confirm no empty input
+            if (!trimmedEContact.startsWith(mContactFormat)) { 
+                this.eContact = mContactFormat + trimmedEContact; 
+                //put +6 together with the trimmed input if +6 is confirmed not there
+            }else{
+                this.eContact = trimmedEContact; // Already starts with +6, remained the same
+            }
+        }else{
+            this.eContact = "";
+        }
+        System.out.println("contact attribute is now: " + this.eContact);
     }
     
 //    //Method

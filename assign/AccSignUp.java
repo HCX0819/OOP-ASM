@@ -310,26 +310,33 @@ public class AccSignUp {
         
         boolean validateContact = false;
         do{
-            System.out.print(" Contact(+60XXXXXXXXX)    : ");
+            System.out.print(" Contact (no \"-\" needed)    : ");
             contact = scanner.nextLine();
 
             boolean emptyContact = false;
             boolean invalidContactLength = false;
+            boolean contactUsed = false;
             boolean invalidContactFormat = false;
             
             if(contact == null || contact.trim().isEmpty()){
                 emptyContact = true;
             }else{
-                if(contact.length()!=13 && contact.length()!=12){
+                if(contact.length()!=10 && contact.length()!=11 && contact.length()!=12 && contact.length()!=13){
                     invalidContactLength = true;            
-                }
-                
-                if(contact.charAt(0)!='+' && contact.charAt(1)!='6' && contact.charAt(2)!='0'){
-                    invalidContactFormat = true;
+                }else{
+                    for(CustAccount account : customerList){
+                        if(contact.equals(account.getContact())){
+                            contactUsed = true;
+                            break;
+                        }
+                    }
+                    if(contact.charAt(0) != '0' && contact.charAt(2) !='0'){
+                        invalidContactFormat = true;
+                    }
                 }
             }
             
-            if(!emptyContact && !invalidContactLength && !invalidContactFormat){
+            if(!emptyContact && !invalidContactLength && !contactUsed && !invalidContactFormat){
                 validateContact = true;
             }else{
                 addMethod.separator();
@@ -342,8 +349,11 @@ public class AccSignUp {
                 if(invalidContactLength){
                     System.out.println("|- Less or more input for contact number       |");
                 }
+                if(contactUsed){
+                    System.out.println("|- Contact number has been used                |");
+                }
                 if(invalidContactFormat){
-                    System.out.println("|- Invalid contact number format               |");
+                    System.out.println("!- Invalid contact format                      |");
                 }
                 addMethod.emptyLine();
                 addMethod.separator();
@@ -359,25 +369,26 @@ public class AccSignUp {
             
             boolean emptyEContact = false;
             boolean sameAsContact = false;
-            boolean invalidContactLength = false;
-            boolean invalidContactFormat = false;
+            boolean invalidEContactLength = false;
+            boolean invalidEContactFormat = false;
             
             if(eContact == null || eContact.trim().isEmpty()){
                 emptyEContact = true;
             }else{
-                if(eContact.equals(contact)){
-                    sameAsContact = true;
-                }
-                if(contact.length()!=13 && contact.length()!=12){
-                    invalidContactLength = true;            
-                }
-                
-                if(eContact.charAt(0)!='+' && eContact.charAt(1)!='6' && eContact.charAt(2)!='0'){
-                    invalidContactFormat = true;
+                if(eContact.length()!=10 && eContact.length()!=11 && eContact.length()!=12 && eContact.length()!=13){
+                    invalidEContactLength = true;            
+                }else{
+                    if(eContact.equals(contact)){
+                        sameAsContact = true;
+                    }
+                    if(eContact.charAt(0) != '0' && eContact.charAt(2) !='0'){
+                        invalidEContactFormat = true;
+                    }
+
                 }
             }
             
-            if(!emptyEContact && !emptyEContact && !sameAsContact && !invalidContactLength && !invalidContactFormat){
+            if(!emptyEContact && !emptyEContact && !sameAsContact && !invalidEContactFormat){
                 validateEContact = true;
             }else{
                 addMethod.separator();
@@ -390,13 +401,12 @@ public class AccSignUp {
                 if(sameAsContact){
                     System.out.println("|- Cannot be the same as user contact number   |");
                 }
-                if(invalidContactLength){
+                if(invalidEContactLength){
                     System.out.println("|- Less or more input for contact              |");
                 }
-                if(invalidContactFormat){
-                    System.out.println("|- Invalid contact number format               |");
+                if(invalidEContactFormat){
+                    System.out.println("|- Invalid emergency contact format            |");
                 }
-                
                 addMethod.emptyLine();
                 addMethod.separator();
                 addMethod.plsTryAgain();
@@ -421,7 +431,7 @@ public class AccSignUp {
         //display input given before
         System.out.println(
             " Provided Information/Details :\n Username                 : "+ uName + "\n" + " Email address            : "+ eAddress + "\n" + " Name                     : " 
-            + name + "\n" + " IC number                : " + icNum + "\n" + " Contact number           : " + contact + "\n" + " Emergency contact number : " + eContact + "\n"
+            + name + "\n" + " IC number                : " + icNum + "\n" + " Contact number           : +6" + contact + "\n" + " Emergency contact number : +6" + eContact + "\n"
         );
         
         addMethod.separator();
