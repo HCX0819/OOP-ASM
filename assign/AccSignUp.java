@@ -6,7 +6,7 @@ package assign;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class AccSignUp { 
+public class AccSignUp{ 
         
     //bring the arrayList and scanner as argument so can be used later    
     public static void signUp(Scanner scanner,ArrayList<CustAccount> customerList){
@@ -129,7 +129,7 @@ public class AccSignUp {
                 }
             }
             
-            if(!emptyPassword && !passLength && !emptyPassword){
+            if(!emptyPassword && !passLength){
                 validatePassword = true;
                 
             }else{
@@ -321,19 +321,28 @@ public class AccSignUp {
             if(contact == null || contact.trim().isEmpty()){
                 emptyContact = true;
             }else{
-                if(contact.length()!=10 && contact.length()!=11 && contact.length()!=12 && contact.length()!=13){
-                    invalidContactLength = true;            
+                if(!contact.startsWith("0") && !contact.startsWith("+60")){
+                    invalidContactFormat = true;
                 }else{
-                    for(CustAccount account : customerList){
-                        if(contact.equals(account.getContact())){
-                            contactUsed = true;
-                            break;
+                    if(contact.startsWith("0")){
+                        if(contact.length()!=10 && contact.length()!=11){
+                            invalidContactLength = true;
                         }
                     }
-                    if(contact.charAt(0) != '0' && contact.charAt(2) !='0'){
-                        invalidContactFormat = true;
+                    else if(contact.startsWith("+60")){
+                        if(contact.length()!=12 && contact.length()!=13){
+                        invalidContactLength = true;            
+                        }
                     }
                 }
+                                    
+                for(CustAccount account : customerList){
+                    if(contact.equals(account.getContact())){
+                        contactUsed = true;
+                        break;
+                    }
+                }
+                
             }
             
             if(!emptyContact && !invalidContactLength && !contactUsed && !invalidContactFormat){
@@ -375,18 +384,37 @@ public class AccSignUp {
             if(eContact == null || eContact.trim().isEmpty()){
                 emptyEContact = true;
             }else{
-                if(eContact.length()!=10 && eContact.length()!=11 && eContact.length()!=12 && eContact.length()!=13){
-                    invalidEContactLength = true;            
+                if(!eContact.startsWith("0") && !eContact.startsWith("+60")){
+                    invalidEContactFormat = true;
                 }else{
-                    if(eContact.equals(contact)){
-                        sameAsContact = true;
+                    if(eContact.startsWith("0")){
+                        if(eContact.length()!=10 && eContact.length()!=11){
+                            invalidEContactLength = true;
+                        }
                     }
-                    if(eContact.charAt(0) != '0' && eContact.charAt(2) !='0'){
-                        invalidEContactFormat = true;
+                    else if(eContact.startsWith("+60")){
+                        if(eContact.length()!=12 && eContact.length()!=13){
+                        invalidEContactLength = true;            
+                        }
                     }
-
                 }
-            }
+
+                String cFormat = "+60"; 
+                if(contact.startsWith(cFormat)){
+                    if(eContact.startsWith("0")){
+                        eContact =  cFormat + eContact;
+                    }
+                }
+                else if(contact.startsWith("0")){
+                    if(eContact.startsWith(("+60"))){
+                        eContact = eContact.substring(2);
+                    }
+                }
+
+                if(eContact.equals(contact)){
+                    sameAsContact = true;
+                }
+            } 
             
             if(!emptyEContact && !emptyEContact && !sameAsContact && !invalidEContactFormat){
                 validateEContact = true;
@@ -431,8 +459,22 @@ public class AccSignUp {
         //display input given before
         System.out.println(
             " Provided Information/Details :\n Username                 : "+ uName + "\n" + " Email address            : "+ eAddress + "\n" + " Name                     : " 
-            + name + "\n" + " IC number                : " + icNum + "\n" + " Contact number           : +6" + contact + "\n" + " Emergency contact number : +6" + eContact + "\n"
-        );
+            + name + "\n" + " IC number                : " + icNum); 
+            
+        if(contact.startsWith("0")){
+            System.out.println(" Contact number           : +6" + contact);
+        }
+        else if(contact.startsWith("+60")){
+            System.out.println(" Contact number           : " + contact);
+        }
+        if(eContact.startsWith("0")){
+            System.out.println(" Emergency contact number : +6" + eContact);
+        }
+        else if(eContact.startsWith("+60")){
+            System.out.println(" Emergency contact number : " + eContact);
+        }        
+           
+        
         
         addMethod.separator();
         System.out.println("|[Confirm account creation]                    |");
