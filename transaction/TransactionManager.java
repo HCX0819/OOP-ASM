@@ -153,7 +153,6 @@ public class TransactionManager {
     private void loadFromFile() {
         File file = new File(fileName);
         if (!file.exists()) {   
-            System.out.println("[INFO] No existing transactions file found. Starting fresh.");
             return;
         }
         
