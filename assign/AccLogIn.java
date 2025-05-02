@@ -15,8 +15,6 @@ import transaction.TransactionApp;
 
 public class AccLogIn {
 
-   
-    
     public static void custLogIn(Scanner scanner, ArrayList<CustAccount>customerList){
         
         addMethod.clearScreen();
@@ -24,6 +22,8 @@ public class AccLogIn {
         
         boolean validateLogIn = false;
         while (!validateLogIn){
+            boolean emptyInput1 = false;
+            boolean emptyInput2 = false;
             boolean userExist = false;
             boolean passwordCorrect = false;
             
@@ -32,19 +32,26 @@ public class AccLogIn {
             System.out.print(" Password       : ");
             String password = scanner.nextLine();
             
-            for(CustAccount account:customerList){
-                if(uNameEmail.equals(account.getuName()) || uNameEmail.equals(account.geteAddress())){
-                    userExist = true;
+            if(uNameEmail == null || uNameEmail.trim().isEmpty()){
+                emptyInput1 = true;
+            }
+            if(password ==null || password.trim().isEmpty()){ 
+                emptyInput2 = true;
+            }
+            if(!emptyInput1 && !emptyInput2){
+                for(CustAccount account:customerList){
+                    if(uNameEmail.equals(account.getuName()) || uNameEmail.equals(account.geteAddress())){
+                        userExist = true;
+
+                        if(password.equals(account.getPassword())){
+                            passwordCorrect = true;
+                            break;                        
+                        }
                     
-                    if(password.equals(account.getPassword())){
-                        passwordCorrect = true;
-                        break;                        
                     }
-                    
                 }
             }
-            
-            if(userExist==true && passwordCorrect==true){
+            if(userExist && passwordCorrect && !emptyInput1 && !emptyInput2){
                 validateLogIn = true;
                 // Set current username for all functions
                 ViewRentalHistory_Function.setCurrentUsername(uNameEmail);
@@ -59,19 +66,26 @@ public class AccLogIn {
                 addMethod.errorHeader();
                 System.out.println("                                 |");                
                 
-                if(!userExist){
-                    System.out.println("|- Non-existing user                           |");                    
-                
-                }    
-                else if(!passwordCorrect){
-                    System.out.println("|- Incorrect password                          |");
+                if(emptyInput1){
+                    System.out.println("|- No username or email address given          |");
+                }
+                if(emptyInput2){
+                    System.out.println("|- No password given                           |");
+                }
+                if(!emptyInput1 && !emptyInput2){
+                    if(!userExist){
+                        System.out.println("|- Non-existing user                           |");                    
+                    }    
+                    else if(!passwordCorrect){
+                        System.out.println("|- Incorrect password                          |");
+                    }
                 }
                 addMethod.emptyLine();
                 addMethod.separator();
                 addMethod.plsTryAgain();
             }
         }
-        
+
         System.out.println("Login Successfully\n");
         addMethod.pressKeyCont(scanner);
         //continue
@@ -83,6 +97,7 @@ public class AccLogIn {
             Start.menu();
         }
     }
+
                 
     
     public static void staffLogIn(Scanner scanner,ArrayList<StaffAccount>staffList){        
@@ -92,6 +107,8 @@ public class AccLogIn {
         boolean validateLogIn = false;
         while (!validateLogIn){
             
+            boolean emptyInput1 = false;
+            boolean emptyInput2 = false;
             boolean userExist = false;
             boolean passwordCorrect = false;
             
@@ -100,19 +117,29 @@ public class AccLogIn {
             System.out.print(" Password       : ");
             String password = scanner.nextLine();
             
-            for(StaffAccount account:staffList){
-                if(uNameEmail.equals(account.getuName()) || uNameEmail.equals(account.geteAddress())){
-                    userExist = true;
+            if(uNameEmail == null || uNameEmail.trim().isEmpty()){
+                emptyInput1 = true;
+            }
+        
+            if(password ==null || password.trim().isEmpty()){ 
+                emptyInput2 = true;
+            }
+            
+            if(!emptyInput1 && !emptyInput2){
+                for(StaffAccount account:staffList){
+                    if(uNameEmail.equals(account.getuName()) || uNameEmail.equals(account.geteAddress())){
+                        userExist = true;
+
+                        if(password.equals(account.getPassword())){
+                            passwordCorrect = true;
+                            break;                        
+                        }
                     
-                    if(password.equals(account.getPassword())){
-                        passwordCorrect = true;
-                        break;                        
                     }
-                    
                 }
             }
             
-            if(userExist==true && passwordCorrect==true){
+            if(userExist && passwordCorrect && !emptyInput1 && !emptyInput2){
                 validateLogIn = true;
             }
             else{
@@ -120,14 +147,21 @@ public class AccLogIn {
                 addMethod.errorHeader();
                 System.out.println("                                 |");                
 
-                if(!userExist){
-                    System.out.println("|- Non-existing user                           |");                    
+                if(emptyInput1){
+                    System.out.println("|- No username or email address given          |");
                 }
-            
-                if(!passwordCorrect){
-                    System.out.println("|- Incorrect password                          |");
+                if(emptyInput2){
+                    System.out.println("|- No password given                           |");
                 }
-                
+                if(!emptyInput1 && !emptyInput2){
+                    if(!userExist){
+                        System.out.println("|- Non-existing user                           |");                    
+                    }    
+                    else if(!passwordCorrect){
+                        System.out.println("|- Incorrect password                          |");
+                    }
+                }
+                addMethod.emptyLine();
                 addMethod.separator();
                 addMethod.plsTryAgain();
             }
