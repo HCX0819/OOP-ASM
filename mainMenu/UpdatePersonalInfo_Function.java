@@ -21,7 +21,7 @@ public class UpdatePersonalInfo_Function {
         // Find current user's account
         CustAccount currentUser = null;
         for (CustAccount account : customerList) {
-            if (account.getuName().equals(currentUsername)) {
+            if (account.getuName().equals(currentUsername) || account.geteAddress().equals(currentUsername)) {
                 currentUser = account;
                 break;
             }
